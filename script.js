@@ -92,8 +92,6 @@ function placeButtons(shapes) {
     });
 }
 
-}
-
 function init() {
     const canvas = document.getElementById('mondrianCanvas');
     canvas.width = window.innerWidth;
