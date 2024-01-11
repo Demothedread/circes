@@ -1,0 +1,39 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0; /* Off-white background */
+}
+
+#mondrianCanvas {
+    border: 1px solid #000;
+    width: 80vw;
+    height: 80vh;
+}
+
+#buttonContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    position: absolute;
+    font-family: 'Garamond', serif;
+}
+
+button {
+    background-color: transparent;
+    color: white;
+    font-size: 16px;
+    text-transform: lowercase;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    #buttonContainer {
+        flex-direction: column;
+    }
+}
