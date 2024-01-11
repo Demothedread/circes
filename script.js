@@ -54,6 +54,7 @@ function isShapeValid(newShape, existingShapes) {
     }
   }
 }
+
 function colorShapes(shapes) {
     const colors = ['#FFD700', '#0055BF', '#CE2029', '#228B22']; // Yellow, Blue, Red, Forest Green
     const probabilities = [0.3, 0.3, 0.3, 0.1]; // Probabilities for each color
