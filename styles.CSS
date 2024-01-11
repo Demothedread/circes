@@ -30,7 +30,10 @@ button {
     border: none;
     cursor: pointer;
 }
-
+button:hover, button:focus {
+    background-color: rgba(255, 255, 255, 0.5); /* Slight background on hover/focus for visibility */
+    color: #000; /* Change text color for contrast */
+}
 /* Responsive adjustments */
 @media (max-width: 600px) {
     #buttonContainer {
