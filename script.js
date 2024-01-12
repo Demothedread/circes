@@ -35,13 +35,6 @@ function isShapeValid(newShape, existingShapes) {
       }
 }
 
-function drawShapes(ctx, maxWidth, maxHeight) {
-    const minShapes = 4;
-    const maxShapes = 8;
-    const shapes = generateShapes(maxWidth, maxHeight, minShapes, maxShapes);
-    colorShapes(ctx, shapes);
-}
-
 function generateShapes(maxWidth, maxHeight, minShapes, maxShapes) {
     const shapes = [];
     const maxAttempts = 100;
@@ -99,6 +92,14 @@ function selectColorIndex(probabilities) {
     return probabilities.length - 1; // Default to last color if none selected
 }
 
+function drawShapes(ctx, maxWidth, maxHeight) {
+    const minShapes = 4;
+    const maxShapes = 8;
+    const shapes = generateShapes(maxWidth, maxHeight, minShapes, maxShapes);
+    colorShapes(ctx, shapes);
+    return shapes; // Return the shapes array
+}
+
 function placeButtons(shapes) {
     const buttons = ['galleryButton', 'resumeButton', 'publicationsButton', 'aboutButton'];
     let placedButtons = 0;
@@ -120,11 +121,12 @@ function init() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     drawRandomLines();
-    drawShapes(ctx, canvas.width, canvas.height);
+    const shapes = drawShapes(ctx, canvas.width, canvas.height);
     placeButtons(shapes);
 }
 
 window.onload = init;
+
 
 
 
