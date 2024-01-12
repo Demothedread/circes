@@ -38,17 +38,12 @@ function drawRandomLines() {
 function isShapeValid(newShape, existingShapes, lines) {
     // Check overlap with existing shapes
     for (let shape of existingShapes) {
-        // ... existing overlap check with shapes ...
-         for (let shape of existingShapes) {
         if (!(newShape.x + newShape.width <= shape.x ||
               shape.x + shape.width <= newShape.x ||
               newShape.y + newShape.height <= shape.y ||
               shape.y + shape.height <= newShape.y)) {
             return false; // Overlap detected
         }
-    }
-    return true; // No overlap found
-    }
     // Check overlap with lines
     for (let line of lines) {
         if (line.orientation === 'vertical') {
@@ -58,10 +53,11 @@ function isShapeValid(newShape, existingShapes, lines) {
         } else { // Horizontal line
             if (newShape.y < line.y && newShape.y + newShape.height > line.y - line.thickness) {
                 return false; // Overlap with horizontal line
+                }
             }
         }
-    }
     return true; // No overlap
+    }
 }
 
 function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
