@@ -23,18 +23,6 @@ function drawRandomLines() {
     }
 }
 
-function isShapeValid(newShape, existingShapes) {
-    for (let shape of existingShapes) {
-        if (!(newShape.x + newShape.width <= shape.x ||
-              shape.x + shape.width <= newShape.x ||
-              newShape.y + newShape.height <= shape.y ||
-              shape.y + shape.height <= newShape.y)) {
-            return false; // Overlap detected
-        }
-    }
-    return true; // No overlap
-}
-
 function generateShapes(maxWidth, maxHeight, minShapes, maxShapes) {
     const shapes = [];
     const maxAttempts = 100;
@@ -42,7 +30,7 @@ function generateShapes(maxWidth, maxHeight, minShapes, maxShapes) {
     const maxShapeWidth = maxWidth / 8;
     const maxShapeHeight = maxHeight / 8;
     const targetShapeCount = Math.floor(Math.random() * (maxShapes - minShapes + 1)) + minShapes;
-     
+
     while (shapes.length < targetShapeCount && attempts < maxAttempts) {
         attempts++;
         let width = Math.floor(Math.random() * 4 + 1) * (maxWidth / 8);
@@ -59,35 +47,46 @@ function generateShapes(maxWidth, maxHeight, minShapes, maxShapes) {
 
         let newShape = { x, y, width, height };
 
+           function isShapeValid(newShape, existingShapes) {
+            for (let shape of existingShapes) {
+                if (!(newShape.x + newShape.width <= shape.x ||
+                  shape.x + shape.width <= newShape.x ||
+                  newShape.y + newShape.height <= shape.y ||
+                  shape.y + shape.height <= newShape.y)) {
+                return false; // Overlap detected
+                }
+             }
+                return true; // No overlap
+           }
+            function colorShapes(ctx, shapes) {
+                const colors = ['#FFD700', '#0055BF', '#CE2029', '#228B22']; // Yellow, Blue, Red, Forest Green
+                const probabilities = [0.3, 0.3, 0.3, 0.1]; // Probabilities for each color
+            
+                shapes.forEach(shape => {
+                let colorIndex = selectColorIndex(probabilities);
+                ctx.fillStyle = colors[colorIndex];
+                ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
+                });
+            }
+            function selectColorIndex(probabilities) {
+                let r = Math.random();
+                let cumulativeProbability = 0;
+                for (let i = 0; i < probabilities.length; i++) {
+                  cumulativeProbability += probabilities[i];
+                 if (r <= cumulativeProbability) {
+                    return i;
+                    }
+                 }
+             return probabilities.length - 1; // Default to last color if none selected
+            }
         if (isShapeValid(newShape, shapes)) {
             shapes.push(newShape);
         }
     }
-
     return shapes;
 }
 
-function colorShapes(ctx, shapes) {
-    const colors = ['#FFD700', '#0055BF', '#CE2029', '#228B22']; // Yellow, Blue, Red, Forest Green
-    const probabilities = [0.3, 0.3, 0.3, 0.1]; // Probabilities for each color
 
-    shapes.forEach(shape => {
-        let colorIndex = selectColorIndex(probabilities);
-        ctx.fillStyle = colors[colorIndex];
-        ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
-    });
-}
-
-function selectColorIndex(probabilities) {
-    let r = Math.random();
-    let cumulativeProbability = 0;
-    for (let i = 0; i < probabilities.length; i++) {
-        cumulativeProbability += probabilities[i];
-        if (r <= cumulativeProbability) {
-            return i;
-        }
-    }
-    return probabilities.length - 1; // Default to last color if none selected
 }
 
 function placeButtons(shapes) {
@@ -109,9 +108,12 @@ function drawShapes(ctx, maxWidth, maxHeight) {
     const minShapes = 4;
     const maxShapes = 8;
     const shapes = generateShapes(maxWidth, maxHeight, minShapes, maxShapes);
+
+    console.log(shapes); // Add this to check what 'shapes' contains
     colorShapes(ctx, shapes);
     return shapes;
 }
+
 
 function init() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
