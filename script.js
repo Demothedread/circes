@@ -86,8 +86,6 @@ function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
         } else {
             console.log('Shape failed validation');
         }
-    }
-
     console.log(`Total shapes generated: ${shapes.length}`);
     return shapes;
 }
