@@ -9,8 +9,8 @@ body {
 
 #mondrianCanvas {
     border: 1px solid #000;
-    width: 80vw;
-    height: 80vh;
+    width: 100vw;
+    height: 100vh;
 }
 
 #buttonContainer {
