@@ -96,10 +96,12 @@ function placeButtons(shapes) {
 }
 
 function init() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     drawRandomLines();
-    const shapes = generateShapes(canvas.width, canvas.height);
+    const shapes = generateShapes(canvas.width, canvas.height); // Pass correct dimensions
     colorShapes(shapes);
     placeButtons(shapes);
 }
