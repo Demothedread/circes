@@ -68,7 +68,7 @@ function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
     
     while (shapes.length < targetShapeCount && attempts < maxAttempts) {
         attempts++;
-        let width = Math.floor(Math.random() * 2)+ 1)* (maxWidth / 16);
+        let width = Math.floor(Math.random() * 2 + 1) * (maxWidth / 16);
         let height = Math.floor(Math.random() * 2 + 1) * (maxHeight / 16);
 
         let x = Math.floor(Math.random() * 8) * (maxWidth / 8);
