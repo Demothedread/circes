@@ -35,16 +35,22 @@ function isShapeValid(newShape, existingShapes) {
       }
 }
 
-function generateShapes(maxWidth, maxHeight) {
+function drawShapes(ctx, maxWidth, maxHeight) {
+    const minShapes = 4;
+    const maxShapes = 8;
+    const shapes = generateShapes(maxWidth, maxHeight, minShapes, maxShapes);
+    colorShapes(ctx, shapes);
+}
+
+function generateShapes(maxWidth, maxHeight, minShapes, maxShapes) {
     const shapes = [];
     const maxAttempts = 100;
     let attempts = 0;
-
-    // Define maximum width and height for shapes
     const maxShapeWidth = maxWidth / 8;
     const maxShapeHeight = maxHeight / 8;
-
-    while (shapes.length < 8 && attempts < maxAttempts) {
+    const targetShapeCount = Math.floor(Math.random() * (maxShapes - minShapes + 1)) + minShapes;
+     
+    while (shapes.length < targetShapeCount && attempts < maxAttempts) {
         attempts++;
         let width = Math.floor(Math.random() * 4 + 1) * (maxWidth / 8);
         let height = Math.floor(Math.random() * 4 + 1) * (maxHeight / 8);
@@ -114,7 +120,7 @@ function init() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     drawRandomLines();
-    const shapes = generateShapes(canvas.width, canvas.height); // Pass correct dimensions
+    drawShapes();
     colorShapes(shapes);
     placeButtons(shapes);
 }
