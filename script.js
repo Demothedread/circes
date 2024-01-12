@@ -4,7 +4,7 @@ canvas.height = window.innerHeight;
 const ctx = canvas.getContext('2d');
 
 function drawRandomLines() {
-    let numberOfLines = Math.floor(Math.random() * 4) + 5;
+    let numberOfLines = Math.floor((Math.random() * 5) + 5);
     let lines = []; // Array to store line information
 
     for (let i = 0; i < numberOfLines; i++) {
@@ -62,7 +62,7 @@ function isShapeValid(newShape, existingShapes, lines) {
 
 function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
     const shapes = [];
-    const maxAttempts = 100;
+    const maxAttempts = 200;
     let attempts = 0;
     const targetShapeCount = Math.floor(Math.random() * (maxShapes - minShapes + 1)) + minShapes;
     
@@ -71,8 +71,8 @@ function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
         let width = Math.floor(Math.random() * 2)+ 1)* (maxWidth / 16);
         let height = Math.floor(Math.random() * 2 + 1) * (maxHeight / 16);
 
-        let x = Math.floor(Math.random() * 8) * (maxWidth / 16);
-        let y = Math.floor(Math.random() * 8) * (maxHeight / 16);
+        let x = Math.floor(Math.random() * 8) * (maxWidth / 8);
+        let y = Math.floor(Math.random() * 8) * (maxHeight / 8);
 
         let newShape = { x, y, width, height };
         if (isShapeValid(newShape, shapes, lines)) { // Pass lines to isShapeValid
