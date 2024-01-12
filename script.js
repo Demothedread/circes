@@ -50,7 +50,7 @@ function isShapeValid(newShape, existingShapes, lines) {
             if (newShape.x < line.x && newShape.x + newShape.width > line.x - line.thickness) {
                 return false; // Overlap with vertical line
             }
-        } else { // Horizontal line
+        } else {
             if (newShape.y < line.y && newShape.y + newShape.height > line.y - line.thickness) {
                 return false; // Overlap with horizontal line
                 }
