@@ -4,7 +4,7 @@ canvas.height = window.innerHeight;
 const ctx = canvas.getContext('2d');
 
 function drawRandomLines() {
-    let numberOfLines = Math.floor(Math.random() * 6) + 5; // Random number between 5 and 10
+     let numberOfLines = Math.floor(Math.random() * 6) + 5; // Random number between 5 and 10
 
     for (let i = 0; i < numberOfLines; i++) {
         let lineOrientation = Math.random() < 0.5 ? 'vertical' : 'horizontal';
@@ -24,24 +24,6 @@ function drawRandomLines() {
     }
 }
 
-function generateShapes(ctx, maxWidth, maxHeight) {
-    const shapes = [];
-    const maxAttempts = 100; // Limit attempts to avoid infinite loops
-    let attempts = 0;
-
-    while (shapes.length < 8 && attempts < maxAttempts) {
-        attempts++;
-        let width = Math.floor(Math.random() * 4 + 1) * (maxWidth / 8); // Width in multiples of 1/8th of canvas width
-        let height = Math.floor(Math.random() * 4 + 1) * (maxHeight / 8); // Height in multiples of 1/8th of canvas height
-        let x = Math.floor(Math.random() * 8) * (maxWidth / 8);
-        let y = Math.floor(Math.random() * 8) * (maxHeight / 8);
-
-        let newShape = { x, y, width, height };
-
-        if (isShapeValid(newShape, shapes)) {
-            shapes.push(newShape);
-}
-
 function isShapeValid(newShape, existingShapes) {
     for (let shape of existingShapes) {
         if (!(newShape.x + newShape.width <= shape.x ||
@@ -51,12 +33,32 @@ function isShapeValid(newShape, existingShapes) {
             return false; // Overlap detected
         }
       }
+}
+
+function generateShapes(maxWidth, maxHeight) {
+    const shapes = [];
+    const maxAttempts = 100;
+    let attempts = 0;
+
+    while (shapes.length < 8 && attempts < maxAttempts) {
+        attempts++;
+        let width = Math.floor(Math.random() * 4 + 1) * (maxWidth / 8);
+        let height = Math.floor(Math.random() * 4 + 1) * (maxHeight / 8);
+        let x = Math.floor(Math.random() * 8) * (maxWidth / 8);
+        let y = Math.floor(Math.random() * 8) * (maxHeight / 8);
+
+        let newShape = { x, y, width, height };
+
+        if (isShapeValid(newShape, shapes)) {
+            shapes.push(newShape);
+        }
     }
-  }
+
+    return shapes;
 }
 
 function colorShapes(shapes) {
-    const colors = ['#FFD700', '#0055BF', '#CE2029', '#228B22']; // Yellow, Blue, Red, Forest Green
+   const colors = ['#FFD700', '#0055BF', '#CE2029', '#228B22']; // Yellow, Blue, Red, Forest Green
     const probabilities = [0.3, 0.3, 0.3, 0.1]; // Probabilities for each color
 
     shapes.forEach(shape => {
@@ -67,7 +69,7 @@ function colorShapes(shapes) {
 }
 
 function selectColorIndex(probabilities) {
-        let r = Math.random();
+     let r = Math.random();
     let cumulativeProbability = 0;
     for (let i = 0; i < probabilities.length; i++) {
         cumulativeProbability += probabilities[i];
@@ -94,18 +96,16 @@ function placeButtons(shapes) {
 }
 
 function init() {
-    const canvas = document.getElementById('mondrianCanvas');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas for redraw
-
-    drawRandomLines(ctx, canvas.width, canvas.height);
-    const shapes = generateShapes(ctx, canvas.width, canvas.height);
-    colorShapes(ctx, shapes);
+    drawRandomLines();
+    const shapes = generateShapes(canvas.width, canvas.height);
+    colorShapes(shapes);
     placeButtons(shapes);
 }
 
-window.onload = init; 
+window.onload = init;
+
+
+
 
