@@ -63,9 +63,11 @@ function generateShapes(maxWidth, maxHeight, minShapes, maxShapes) {
 
         if (isShapeValid(newShape, shapes)) {
             shapes.push(newShape);
+             console.log("New shape added:", newShape); 
         }
     }
 
+    console.log("Total shapes generated:", shapes.length); 
     return shapes;
 }
 
@@ -89,7 +91,7 @@ function selectColorIndex(probabilities) {
             return i;
         }
     }
-    return probabilities.length - 1; // Default to last color if none selected
+    return probabilities.length - 1; 
 }
 
 function drawShapes(ctx, maxWidth, maxHeight) {
@@ -97,7 +99,7 @@ function drawShapes(ctx, maxWidth, maxHeight) {
     const maxShapes = 8;
     const shapes = generateShapes(maxWidth, maxHeight, minShapes, maxShapes);
     colorShapes(ctx, shapes);
-    return shapes; // Return the shapes array
+    return shapes; 
 }
 
 function placeButtons(shapes) {
@@ -112,21 +114,27 @@ function placeButtons(shapes) {
             button.style.top = `${shape.y + (shape.height / 2)}px`;
             placedButtons++;
         }
+     console.log(`Button ${buttons[placedButtons]} placed at (${shape.x + (shape.width / 2)}, ${shape.y + (shape.height / 2)})`);
     });
 }
 
 function init() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var canvas = document.getElementById('mondrianCanvas');
+    if (canvas.getContext) {
+        var ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    drawRandomLines();
-    const shapes = drawShapes(ctx, canvas.width, canvas.height);
-    placeButtons(shapes);
+        drawRandomLines(ctx);
+        const shapes = drawShapes(ctx, canvas.width, canvas.height);
+        placeButtons(shapes);
+    } else {
+        // Canvas is not supported in this browser
+        console.log("Canvas is not supported in your browser.");
+    }
 }
 
 window.onload = init;
-
-
 
 
