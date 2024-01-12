@@ -40,12 +40,25 @@ function generateShapes(maxWidth, maxHeight) {
     const maxAttempts = 100;
     let attempts = 0;
 
+    // Define maximum width and height for shapes
+    const maxShapeWidth = maxWidth / 8;
+    const maxShapeHeight = maxHeight / 8;
+
     while (shapes.length < 8 && attempts < maxAttempts) {
         attempts++;
         let width = Math.floor(Math.random() * 4 + 1) * (maxWidth / 8);
         let height = Math.floor(Math.random() * 4 + 1) * (maxHeight / 8);
+
+        // Limit the width and height of the shape
+        width = Math.min(width, maxShapeWidth);
+        height = Math.min(height, maxShapeHeight);
+
         let x = Math.floor(Math.random() * 8) * (maxWidth / 8);
         let y = Math.floor(Math.random() * 8) * (maxHeight / 8);
+
+        // Ensure the shape doesn't go beyond the canvas boundaries
+        x = Math.min(x, maxWidth - width);
+        y = Math.min(y, maxHeight - height);
 
         let newShape = { x, y, width, height };
 
