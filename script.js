@@ -30,7 +30,7 @@ function isShapeValid(newShape, existingShapes) {
               shape.x + shape.width <= newShape.x ||
               newShape.y + newShape.height <= shape.y ||
               shape.y + shape.height <= newShape.y)) {
-            return false; // Overlap detected
+            return false; 
         }
       }
 }
@@ -48,16 +48,14 @@ function generateShapes(maxWidth, maxHeight, minShapes, maxShapes) {
         let width = Math.floor(Math.random() * 4 + 1) * (maxWidth / 8);
         let height = Math.floor(Math.random() * 4 + 1) * (maxHeight / 8);
 
-        // Limit the width and height of the shape
         width = Math.min(width, maxShapeWidth);
         height = Math.min(height, maxShapeHeight);
 
         let x = Math.floor(Math.random() * 8) * (maxWidth / 8);
         let y = Math.floor(Math.random() * 8) * (maxHeight / 8);
 
-        // Ensure the shape doesn't go beyond the canvas boundaries
-        x = Math.min(x, maxWidth - width);
-        y = Math.min(y, maxHeight - height);
+        x = Math.min(x, (maxWidth - width));
+        y = Math.min(y, (maxHeight - height));
 
         let newShape = { x, y, width, height };
 
