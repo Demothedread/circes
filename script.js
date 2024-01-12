@@ -4,7 +4,9 @@ canvas.height = window.innerHeight;
 const ctx = canvas.getContext('2d');
 
 function drawRandomLines() {
-    let numberOfLines = Math.floor(Math.random() * 6) + 5; // Random number between 5 and 10
+    let numberOfLines = Math.floor(Math.random() * 6) + 5;
+    let lines = []; // Array to store line information
+
     for (let i = 0; i < numberOfLines; i++) {
         let lineOrientation = Math.random() < 0.5 ? 'vertical' : 'horizontal';
         let lineThickness = Math.floor(Math.random() * (8 - 1) + 1) * 2; // 2-16 at intervals of 2
@@ -20,11 +22,24 @@ function drawRandomLines() {
             ctx.lineTo(canvas.width, position);
         }
         ctx.stroke();
+        
+     // Store line information
+        lines.push({
+            x: position,
+            y: position,
+            orientation: lineOrientation,
+            thickness: lineThickness
+        });
     }
+    
+    return lines;
 }
 
-function isShapeValid(newShape, existingShapes) {
+function isShapeValid(newShape, existingShapes, lines) {
+    // Check overlap with existing shapes
     for (let shape of existingShapes) {
+        // ... existing overlap check with shapes ...
+         for (let shape of existingShapes) {
         if (!(newShape.x + newShape.width <= shape.x ||
               shape.x + shape.width <= newShape.x ||
               newShape.y + newShape.height <= shape.y ||
@@ -33,9 +48,23 @@ function isShapeValid(newShape, existingShapes) {
         }
     }
     return true; // No overlap found
+    }
+    // Check overlap with lines
+    for (let line of lines) {
+        if (line.orientation === 'vertical') {
+            if (newShape.x < line.x && newShape.x + newShape.width > line.x - line.thickness) {
+                return false; // Overlap with vertical line
+            }
+        } else { // Horizontal line
+            if (newShape.y < line.y && newShape.y + newShape.height > line.y - line.thickness) {
+                return false; // Overlap with horizontal line
+            }
+        }
+    }
+    return true; // No overlap
 }
 
-function generateShapes(maxWidth, maxHeight, minShapes, maxShapes) {
+function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
     const shapes = [];
     const maxAttempts = 100;
     let attempts = 0;
@@ -50,11 +79,10 @@ function generateShapes(maxWidth, maxHeight, minShapes, maxShapes) {
         let y = Math.floor(Math.random() * 8) * (maxHeight / 8);
 
         let newShape = { x, y, width, height };
-        if (isShapeValid(newShape, shapes)) {
-            shapes.push(newShape);
-        }
+        if (isShapeValid(newShape, shapes, lines)) { // Pass lines to isShapeValid
+        shapes.push(newShape);
+        } 
     }
-
     return shapes;
 }
 
@@ -98,10 +126,11 @@ function placeButtons(shapes) {
 
 function init() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawRandomLines();
-    const shapes = generateShapes(canvas.width, canvas.height, 4, 8); // Generate 4 to 8 shapes
+    const lines = drawRandomLines(); // Capture line information
+    const shapes = generateShapes(canvas.width, canvas.height, 4, 8, lines); // Pass lines to generateShapes
     colorShapes(ctx, shapes);
     placeButtons(shapes);
 }
+
 
 window.onload = init;
