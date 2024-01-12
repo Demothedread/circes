@@ -68,17 +68,27 @@ function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
     
     while (shapes.length < targetShapeCount && attempts < maxAttempts) {
         attempts++;
-        let width = Math.floor(Math.random() * 2 + 1) * (maxWidth / 16);
-        let height = Math.floor(Math.random() * 2 + 1) * (maxHeight / 16);
+        let width = Math.floor(Math.random() * 2 + 1) * (maxWidth / 64);
+        let height = Math.floor(Math.random() * 2 + 1) * (maxHeight / 64);
 
-        let x = Math.floor(Math.random() * 8) * (maxWidth / 8);
-        let y = Math.floor(Math.random() * 8) * (maxHeight / 8);
+        let x = Math.floor(Math.random() * 8) * (maxWidth / 64);
+        let y = Math.floor(Math.random() * 8) * (maxHeight / 64);
 
         let newShape = { x, y, width, height };
         if (isShapeValid(newShape, shapes, lines)) { // Pass lines to isShapeValid
         shapes.push(newShape);
         } 
     }
+     console.log(`Attempt ${attempts}: Shape - x: ${x}, y: ${y}, width: ${width}, height: ${height}`);
+        if (isShapeValid(newShape, shapes, lines)) {
+            shapes.push(newShape);
+            console.log('Shape added successfully');
+        } else {
+            console.log('Shape failed validation');
+        }
+    }
+
+    console.log(`Total shapes generated: ${shapes.length}`);
     return shapes;
 }
 
