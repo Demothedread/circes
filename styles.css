@@ -1,10 +1,10 @@
-body {
+body, html {
     margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0; /* Off-white background */
+    background-color: #f6f6f6;
 }
 
 #mondrianCanvas {
