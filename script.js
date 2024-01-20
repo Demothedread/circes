@@ -64,29 +64,33 @@ function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
 function isShapeValid(newShape, existingShapes, lines) {
     // Check overlap with existing shapes
     for (let shape of existingShapes) {
-        if (!(newShape.x + newShape.width <= shape.x ||
-              shape.x + shape.width <= newShape.x ||
-              newShape.y + newShape.height <= shape.y ||
-              shape.y + shape.height <= newShape.y)) {
-            return false; // Overlap detected
+        let overlap = !(newShape.x + newShape.width <= shape.x ||
+                        shape.x + shape.width <= newShape.x ||
+                        newShape.y + newShape.height <= shape.y ||
+                        shape.y + shape.height <= newShape.y);
+        if (overlap) {
+            console.log("Overlap with shape detected", newShape, shape);
+            return false; // Overlap detected with a shape
         }
+    }
+
     // Check overlap with lines
     for (let line of lines) {
-        // Check for overlap with lines
-        console.log("Checking line:", line); // Log each line being checked
+        let overlap;
         if (line.orientation === 'vertical') {
-            if (newShape.x < line.x && newShape.x + newShape.width > line.x - line.thickness) {
-                return false; // Overlap with vertical line
-            }
-        } else {
-            if (newShape.y < line.y && newShape.y + newShape.height > line.y - line.thickness) {
-                return false; // Overlap with horizontal line
-                }
-            }
+            overlap = newShape.x < line.x + line.thickness && newShape.x + newShape.width > line.x;
+        } else { // Horizontal line
+            overlap = newShape.y < line.y + line.thickness && newShape.y + newShape.height > line.y;
         }
-    return true; // No overlap
+        if (overlap) {
+            console.log("Overlap with line detected", newShape, line);
+            return false; // Overlap detected with a line
+        }
     }
+
+    return true; // No overlaps
 }
+
 
 
 function colorShapes(ctx, shapes) {
