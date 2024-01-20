@@ -17,7 +17,8 @@ function drawRandomLines() {
         if (lineOrientation === 'vertical') {
             ctx.moveTo(position, 0);
             ctx.lineTo(position, canvas.height);
-        } else {
+        } 
+        else {
             ctx.moveTo(0, position);
             ctx.lineTo(canvas.width, position);
         }
@@ -37,29 +38,73 @@ function drawRandomLines() {
 
 function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
     const shapes = [];
-    const maxAttempts = 200;
+    const maxAttempts = 100;
     let attempts = 0;
     const targetShapeCount = Math.floor(Math.random() * (maxShapes - minShapes + 1)) + minShapes;
-    console.log("Target shape count:", targetShapeCount); //log target count
     
     while (shapes.length < targetShapeCount && attempts < maxAttempts) {
         attempts++;
-        let width = Math.floor(Math.random() * 2 + 1) * (maxWidth / 64);
-        let height = Math.floor(Math.random() * 2 + 1) * (maxHeight / 64);
+        let newShape;
 
-        let x = Math.floor(Math.random() * 32) * (maxWidth / 64);
-        let y = Math.floor(Math.random() * 32) * (maxHeight / 64);
+        if (Math.random() < 0.5) { // Half the time, generate shape between lines
+            newShape = generateQuadrangleBetweenLines(lines, maxWidth, maxHeight);
+        } else { // Other half, generate random size shape
+            newShape = generateRandomSizeShape(maxWidth, maxHeight);
+        }
 
-        let newShape = { x, y, width, height };
-        console.log("Attempting to add shape:", newShape); // Log shape before validation
-        if (isShapeValid(newShape, shapes, lines)) { // Pass lines to isShapeValid
+        if (isShapeValid(newShape, shapes, lines)) {
             shapes.push(newShape);
-            console.log("Shape added:", newShape); // Log each added shape
-        } 
+            console.log("how many shapes:", shapes)
+        }
+
+     return shapes;
     }
-    console.log("Total shapes generated:", shapes.length); //log total shapes generated
-    return shapes;
 }
+
+function generateQuadrangleBetweenLines(lines, maxWidth, maxHeight) {
+    // Separate vertical and horizontal lines
+    let verticalLines = lines.filter(line => line.orientation === 'vertical').sort((a, b) => a.x - b.x);
+    let horizontalLines = lines.filter(line => line.orientation === 'horizontal').sort((a, b) => a.y - b.y);
+
+    // Add boundary lines for the canvas edges
+    verticalLines.push({ x: 0, thickness: 0 }, { x: maxWidth, thickness: 0 });
+    horizontalLines.push({ y: 0, thickness: 0 }, { y: maxHeight, thickness: 0 });
+
+    // Randomly select gaps between lines
+    let vertGap = selectRandomGap(verticalLines, maxWidth);
+    let horizGap = selectRandomGap(horizontalLines, maxHeight);
+
+    // Define the quadrangle shape
+    return {
+        x: vertGap.start + vertGap.thickness,
+        y: horizGap.start + horizGap.thickness,
+        width: vertGap.end - vertGap.start - vertGap.thickness,
+        height: horizGap.end - horizGap.start - horizGap.thickness
+    };
+}
+
+function selectRandomGap(lines, maxDimension) {
+        let gapIndex = Math.floor(Math.random() * (lines.length - 1));
+        let startLine = lines[gapIndex];
+        let endLine = lines[gapIndex + 1];
+
+        return {
+            start: startLine.x || startLine.y,
+            end: endLine.x || endLine.y,
+            thickness: startLine.thickness
+        };
+    }
+        
+function generateRandomSizeShape(maxWidth, maxHeight) {
+    const minSize = Math.min(maxWidth, maxHeight) / 16; // Floor size 1/16th of screen size
+    let width = Math.max(Math.random() * maxWidth / 8, minSize);
+    let height = Math.max(Math.random() * maxHeight / 8, minSize);
+
+    let x = Math.random() * (maxWidth - width);
+    let y = Math.random() * (maxHeight - height);
+
+    return { x, y, width, height };
+}       
 
 function isShapeValid(newShape, existingShapes, lines) {
     // Check overlap with existing shapes
@@ -140,4 +185,4 @@ function init() {
 }
 
 
-window.onload = init;
+window.onload = init()
