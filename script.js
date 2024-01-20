@@ -31,8 +31,34 @@ function drawRandomLines() {
             thickness: lineThickness
         });
     }
-    
+    console.log("Lines generated:", lines); // Log generated lines
     return lines;
+}
+
+function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
+    const shapes = [];
+    const maxAttempts = 200;
+    let attempts = 0;
+    const targetShapeCount = Math.floor(Math.random() * (maxShapes - minShapes + 1)) + minShapes;
+    console.log("Target shape count:", targetShapeCount); //log target count
+    
+    while (shapes.length < targetShapeCount && attempts < maxAttempts) {
+        attempts++;
+        let width = Math.floor(Math.random() * 2 + 1) * (maxWidth / 64);
+        let height = Math.floor(Math.random() * 2 + 1) * (maxHeight / 64);
+
+        let x = Math.floor(Math.random() * 32) * (maxWidth / 64);
+        let y = Math.floor(Math.random() * 32) * (maxHeight / 64);
+
+        let newShape = { x, y, width, height };
+        console.log("Attempting to add shape:", newShape); // Log shape before validation
+        if (isShapeValid(newShape, shapes, lines)) { // Pass lines to isShapeValid
+            shapes.push(newShape);
+            console.log("Shape added:", newShape); // Log each added shape
+        } 
+    }
+    console.log("Total shapes generated:", shapes.length); //log total shapes generated
+    return shapes;
 }
 
 function isShapeValid(newShape, existingShapes, lines) {
@@ -46,6 +72,8 @@ function isShapeValid(newShape, existingShapes, lines) {
         }
     // Check overlap with lines
     for (let line of lines) {
+        // Check for overlap with lines
+        console.log("Checking line:", line); // Log each line being checked
         if (line.orientation === 'vertical') {
             if (newShape.x < line.x && newShape.x + newShape.width > line.x - line.thickness) {
                 return false; // Overlap with vertical line
@@ -60,28 +88,6 @@ function isShapeValid(newShape, existingShapes, lines) {
     }
 }
 
-function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
-    const shapes = [];
-    const maxAttempts = 200;
-    let attempts = 0;
-    const targetShapeCount = Math.floor(Math.random() * (maxShapes - minShapes + 1)) + minShapes;
-    
-    while (shapes.length < targetShapeCount && attempts < maxAttempts) {
-        attempts++;
-        let width = Math.floor(Math.random() * 2 + 1) * (maxWidth / 64);
-        let height = Math.floor(Math.random() * 2 + 1) * (maxHeight / 64);
-
-        let x = Math.floor(Math.random() * 32) * (maxWidth / 64);
-        let y = Math.floor(Math.random() * 32) * (maxHeight / 64);
-
-        let newShape = { x, y, width, height };
-        if (isShapeValid(newShape, shapes, lines)) { // Pass lines to isShapeValid
-        shapes.push(newShape);
-        } 
-    }
-    console.log(`Total shapes generated: ${shapes.length}`);
-    return shapes;
-}
 
 function colorShapes(ctx, shapes) {
     const colors = ['#FFD700', '#0055BF', '#CE2029', '#228B22']; // Yellow, Blue, Red, Forest Green
