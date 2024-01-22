@@ -54,12 +54,13 @@ function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
 
         if (isShapeValid(newShape, shapes, lines)) {
             shapes.push(newShape);
-            console.log("how many shapes:", shapes)
+            console.log("how many shapes:", shapes.length);
         }
-
-     return shapes;
     }
+
+    return shapes;
 }
+
 
 function generateQuadrangleBetweenLines(lines, maxWidth, maxHeight) {
     // Separate vertical and horizontal lines
@@ -78,9 +79,10 @@ function generateQuadrangleBetweenLines(lines, maxWidth, maxHeight) {
     return {
         x: vertGap.start + vertGap.thickness,
         y: horizGap.start + horizGap.thickness,
-        width: vertGap.end - vertGap.start - vertGap.thickness,
-        height: horizGap.end - horizGap.start - horizGap.thickness
+        width: vertGap.end - (vertGap.start + vertGap.thickness),
+        height: horizGap.end - (horizGap.start + horizGap.thickness)
     };
+}
 }
 
 function selectRandomGap(lines, maxDimension) {
@@ -168,7 +170,7 @@ function placeButtons(shapes) {
     shapes.forEach(shape => {
         if (placedButtons < buttons.length) {
             let button = document.getElementById(buttons[placedButtons]);
-            button.style.position = 'absolute';
+            button.style.position = "absolute";
             button.style.left = `${shape.x + (shape.width / 2)}px`;
             button.style.top = `${shape.y + (shape.height / 2)}px`;
             placedButtons++;
