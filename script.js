@@ -57,7 +57,6 @@ function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
             console.log("how many shapes:", shapes.length);
         }
     }
-
     return shapes;
 }
 
@@ -83,7 +82,6 @@ function generateQuadrangleBetweenLines(lines, maxWidth, maxHeight) {
         height: horizGap.end - (horizGap.start + horizGap.thickness)
     };
 }
-}
 
 function selectRandomGap(lines, maxDimension) {
         let gapIndex = Math.floor(Math.random() * (lines.length - 1));
@@ -96,7 +94,7 @@ function selectRandomGap(lines, maxDimension) {
             thickness: startLine.thickness
         };
     }
-        
+ 
 function generateRandomSizeShape(maxWidth, maxHeight) {
     const minSize = Math.min(maxWidth, maxHeight) / 16; // Floor size 1/16th of screen size
     let width = Math.max(Math.random() * maxWidth / 8, minSize);
