@@ -41,6 +41,7 @@ function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
     const maxAttempts = 100;
     let attempts = 0;
     const targetShapeCount = Math.floor(Math.random() * (maxShapes - minShapes + 1)) + minShapes;
+    minShapes = Math.max(minShapes, 5); // Ens minShapes = Math.max(minShapes, 5); // Ens
     
     while (shapes.length < targetShapeCount && attempts < maxAttempts) {
         attempts++;
