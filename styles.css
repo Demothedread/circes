@@ -23,8 +23,8 @@ body, html {
 
 button {
     background-color: transparent;
-    color: white;
-    font-size: 16px;
+    color: black;
+    font-size: 20px;
     text-transform: lowercase;
     padding: 10px;
     border: none;
@@ -34,6 +34,21 @@ button:hover, button:focus {
     background-color: rgba(255, 255, 255, 0.5); /* Slight background on hover/focus for visibility */
     color: #000; /* Change text color for contrast */
 }
+
+title{
+    background-color: transparent;
+    font-size: 72px;
+    font-weight: bold; /* Bold font */
+    text-transform: uppercase; /* All uppercase letters */
+    background: -webkit-linear-gradient(#1e5799, #7db9e8); /* Chrome, Safari4+ */
+    background: -o-linear-gradient(#1e5799, #7db9e8); /* Opera 11.10+ */
+    background: -moz-linear-gradient(#1e5799, #7db9e8); /* Firefox 3.6+ */
+    background: linear-gradient(#1e5799, #7db9e8); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+     -webkit-background-clip: text;
+     -webkit-text-fill-color: transparent; /* Apply the gradient only to the text for webkit browsers */
+    display: inline-block; /* Required for background clip */
+}
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
     #buttonContainer {
