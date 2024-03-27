@@ -37,6 +37,8 @@ button:hover, button:focus {
 
 .large-title{
     background-color: transparent;
+    text-align: center 
+    padding: 10px
     font-size: 72px;
     font-weight: bold; /* Bold font */
     text-transform: uppercase; /* All uppercase letters */
