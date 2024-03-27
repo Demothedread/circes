@@ -35,9 +35,13 @@ button:hover, button:focus {
     color: #000; /* Change text color for contrast */
 }
 
+.container {
+  text-align: center; /* Center align container contents */
+  padding-top: 20px; /* Adjust top padding to position title near the top */
+}
 .large-title{
     background-color: transparent;
-    text-align: center 
+    position: center 
     padding: 10px
     font-size: 72px;
     font-weight: bold; /* Bold font */
