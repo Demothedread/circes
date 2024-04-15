@@ -1,8 +1,26 @@
-#banner {
+ #banner {
     position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
+    width: 50%;
+    background-color: #fff;
+    color: #333;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.25);
+    z-index: 1000;
+}
+
+canvas {
+    position: absolute;
+    top: 50px;  /* Account for the banner height */
+    left: 0;
+    right: 0;
+    bottom: 0;
     width: 100%;
-    z-index: 1000; /* Ensure it stays on top of other content */
+}
+
 }
 
 body, html {
