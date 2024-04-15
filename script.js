@@ -133,8 +133,20 @@ function isShapeValid(newShape, existingShapes, lines) {
             return false; // Overlap detected with a line
         }
     }
-
     return true; // No overlaps
+
+    // Check mandatory line presence on edges
+    const hasVerticalLine = lines.some(line => line.orientation === 'vertical' && 
+    (newShape.x === line.x || newShape.x + newShape.width === line.x));
+    const hasHorizontalLine = lines.some(line => line.orientation === 'horizontal' && 
+    (newShape.y === line.y || newShape.y + newShape.height === line.y));
+
+    if (!hasVerticalLine || !hasHorizontalLine) {
+        console.log("Required line on edge missing", newShape);
+        return false;
+    }
+
+    return true;
 }
 
 
