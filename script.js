@@ -36,6 +36,37 @@ function drawRandomLines() {
     return lines;
 }
 
+function generateLines(ctx) {
+    const numLines = Math.floor(Math.random() * 10) + 5; // Random number of lines between 5 and 15
+    for (let i = 0; i < numLines; i++) {
+        let xOrY = Math.random() > 0.5 ? 'x' : 'y';
+        let linePosition = Math.floor(Math.random() * canvas.width); // Adjust depending on orientation
+        let thickness = 2 * (Math.floor(Math.random() * 8) + 1); // Ensures a line thickness of 2, 4,..., or 16
+
+        ctx.fillStyle = 'black';
+        if (xOrY === 'x') {
+            ctx.fillRect(linePosition, 0, thickness, canvas.height); // Vertical line
+        } else {
+            ctx.fillRect(0, linePosition, canvas.width, thickness); // Horizontal line
+        }
+    }
+}
+function generateLines(ctx) {
+    const numLines = Math.floor(Math.random() * 10) + 5; // Random number of lines between 5 and 15
+    for (let i = 0; i < numLines; i++) {
+        let xOrY = Math.random() > 0.5 ? 'x' : 'y';
+        let linePosition = Math.floor(Math.random() * canvas.width); // Adjust depending on orientation
+        let thickness = 2 * (Math.floor(Math.random() * 8) + 1); // Ensures a line thickness of 2, 4,..., or 16
+
+        ctx.fillStyle = 'black';
+        if (xOrY === 'x') {
+            ctx.fillRect(linePosition, 0, thickness, canvas.height); // Vertical line
+        } else {
+            ctx.fillRect(0, linePosition, canvas.width, thickness); // Horizontal line
+        }
+    }
+}
+
 function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
     const shapes = [];
     const maxAttempts = 100;
@@ -107,19 +138,35 @@ function generateRandomSizeShape(maxWidth, maxHeight) {
     return { x, y, width, height };
 }       
 
-function isShapeValid(newShape, existingShapes, lines) {
-    // Check overlap with existing shapes
-    for (let shape of existingShapes) {
-        let overlap = !(newShape.x + newShape.width <= shape.x ||
-                        shape.x + shape.width <= newShape.x ||
-                        newShape.y + newShape.height <= shape.y ||
-                        shape.y + shape.height <= newShape.y);
-        if (overlap) {
-            console.log("Overlap with shape detected", newShape, shape);
-            return false; // Overlap detected with a shape
+function isValidShape(x, y, width, height, lines) {
+    let touchesHorizontalLine = false;
+    let touchesVerticalLine = false;
+    
+    // Iterate through each line to check intersections and adjacency
+    for (let line of lines) {
+        if (line.orientation === 'horizontal') {
+            // Check if line is at the top or bottom edge of the shape
+            if ((line.y === y || line.y === y + height) && line.x < x + width && line.x + line.length > x) {
+                touchesHorizontalLine = true;
+            }
+            // Check if the line intersects the shape
+            if (line.y > y && line.y < y + height && line.x < x + width && line.x + line.length > x) {
+                return false; // The line intersects the shape vertically.
+            }
+        } else if (line.orientation === 'vertical') {
+            // Check if line is at the left or right edge of the shape
+            if ((line.x === x || line.x === x + width) && line.y < y + height && line.y + line.length > y) {
+                touchesVerticalLine = true;
+            }
+            // Check if the line intersects the shape
+            if (line.x > x && line.x < x + width && line.y < y + height && line.y + line.length > y) {
+                return false; // The line intersects the shape horizontally.
+            }
         }
     }
-
+    // Return true if shape is touching at least one horizontal and one vertical line without crossing
+    return touchesHorizontalLine && touchesVerticalLine;
+    
     // Check overlap with lines
     for (let line of lines) {
         let overlap;
