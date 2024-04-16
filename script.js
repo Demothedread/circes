@@ -139,3 +139,40 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', adjustCanvas);
     adjustCanvas();  // Initial setup
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const galleryModal = document.createElement('div');
+    galleryModal.className = 'gallery-modal';
+    const galleryContent = document.createElement('div');
+    galleryContent.className = 'gallery-content';
+    const span = document.createElement('span');
+    span.className = 'close-button';
+    span.innerHTML = '&times;';
+    span.onclick = function() {
+        galleryModal.style.display = "none";
+    };
+
+    galleryModal.appendChild(galleryContent);
+    galleryContent.appendChild(span);
+
+    const img = document.createElement('img');
+    img.className = 'fade-in'; // Apply fade-in effect
+    img.style.width = '100%';
+    // Example image, replace src
+    img.src = 'https://your.image/source.jpg';
+    galleryContent.appendChild(img);
+    
+    document.body.appendChild(galleryModal);
+
+    // Allow multiple images by linking additional next/back navigation, and handling how to update the img's src attribute.
+    
+    // Example usage from common shape color fill handler onClick.
+    shapes.forEach(shape => {
+        // Detect click on shape
+        document.getElementById(shape.id).addEventListener('click', () => {
+            // Show image, update with actual URL or local data
+            img.src = 'https://new.image/source.jpg'; // Adjust SRC on Click or by shape
+            galleryModal.style.display = "block";
+        });
+    });
+});
