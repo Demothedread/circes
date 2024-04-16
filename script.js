@@ -1,107 +1,123 @@
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('mondrianCanvas');
     const ctx = canvas.getContext('2d');
-
     let lines = [];
     let shapes = [];
 
+    // Adjusts the canvas size and re-initializes the drawing
     function adjustCanvas() {
         canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight - 50;  // Account for banner
-        initArt();
+        canvas.height = window.innerHeight - 50; // Account for banner
+        init();
     }
 
-    function initArt() {
+    // Initializes the Mondrian drawing
+    function init() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         lines = drawRandomLines();
-        shapes = generateShapes(canvas.width, canvas.height, 4, 8, lines);
-        colorShapes(shapes);
-        overlayMultimediaButtons(shapes);
+        shapes = generateShapes(canvas.width, canvas.height, 6, 10, lines); // Ensuring at least 6 shapes
+        assignColorsToShapes(shapes);
+        placebuttons(shapes);
     }
-
+    
     function drawRandomLines() {
-        const numberOfLines = Math.floor((Math.random() * 10) + 5);
-        const lines = [];
-    
-        for (let i = 0; i < numberOfLines; i++) {
-            const orientation = Math.random() < 0.5 ? 'vertical' : 'horizontal';
-            const thickness = Math.floor(Math.random() * 8 + 1) * 2;
-            const position = Math.random() * (orientation === 'vertical' ? canvas.width : canvas.height);
-    
-            ctx.lineWidth = thickness;
-            ctx.beginPath();
-            if (orientation === 'vertical') {
-                ctx.moveTo(position, 0);
-                ctx.lineTo(position, canvas.height);
-            } else {
-                ctx.moveTo(0, position);
-                ctx.lineTo(canvas.width, position);
-            }
-            ctx.stroke();
-            lines.push({ x: position, orientation, thickness });
+      let lines = [];
+      const numLines = Math.floor(Math.random() * 10) + 5; // Random number of lines between 5 and 15
+      for (let i = 0; i < numLines; i++) {
+        let lineOrientation = Math.random() < 0.5 ? 'vertical' : 'horizontal';
+        let lineThickness = Math.floor(Math.random() * (8 - 1) + 1) * 2; // 2-16 at intervals of 2
+        let position = Math.random() * (lineOrientation === 'vertical' ? canvas.width : canvas.height);
+
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = lineThickness;
+        ctx.beginPath();
+        if (lineOrientation === 'vertical') {
+            ctx.moveTo(position, 0);
+            ctx.lineTo(position, canvas.height);
+        } else {
+            ctx.moveTo(0, position);
+            ctx.lineTo(canvas.width, position);
         }
-        return lines;
-    }
-
-    function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
-        const attemptLimit = 200;
-        let shapes = [], currentAttempts = 0;
-
-        const targetShapeCount = Math.floor(Math.random() * (maxShapes - minShapes + 1)) + minShapes;
-
-        while (shapes.length < targetShapeCount && currentAttempts < attemptLimit) {
-            currentAttempts++;
-            let newShape = {
-                width: Math.floor(Math.random() * (maxWidth / 4) + 20),
-                height: Math.floor(Math.random() * (maxHeight / 4) + 20),
-                x: Math.floor(Math.random() * (maxWidth - this.width)),
-                y: Math.floor(Math.random() * (maxHeight - this.height))
-            };
-
-            if (isValidShape(newShape, lines)) {
-                shapes.push(newShape);
-            }
-        }
-        return shapes;
-    }
-
-    // Check shapes don't overlap existing lines and fit within A logical grid framed by these lines
-    function isValidShape(shape, lines) {
-        let inVerticalBoundary = false;
-        let inHorizontalBoundary = false;
+        ctx.stroke();
         
-        // Check for each line if it divides the shape:
-        // A vertical line should not cross the shape horizontally (pass through it left to right)
-        // A horizontal line should not cross the shape vertically (pass through it top to bottom)
-        for (let line of lines) {
-            if (line.orientation === 'vertical') {
-                const verticalCross = (shape.x < line.x && shape.x + shape.width > line.x) 
-                               || (shape.x > line.x + line.thickness);
-        
-                if (!verticalCross) {
-                    inVerticalBoundary = true;
-                } else if(verticalCross && (shape.x + shape.width >= line.x && shape.x <= line.x)) {
-                    // Hop out, as the shape is clipped horizontally
-                    return false;
-                }
-            } else { // line.orientation is 'horizontal'
-                const horizontalCross = (shape.y < line.y && shape.y + shape.height > line.y) 
-                                     || (shape.y > line.y + line.thickness);
-        
-                if (!horizontalCross) {
-                    inHorizontalBoundary = true;
-                } else if(horizontalCross && (shape.y + shape.height >= line.y && shape.y <= line.y)) {
-                    // Hop out, as the shape is clipped vertically
-                    return false;
-            }
-        }
+        lines.push({ orientation: lineOrientation, position, thickness: lineThickness });
     }
-
-    // Ensure the shape has adequate surrounding bordering lines (bottom, top)
-    return inVerticalBoundary && inHorizontalBoundary;
+    return lines;
 }
 
-// Use this function in your shape creation loop to ensure all shapes meet these position criteria.
+    }
+
+   function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
+    const shapes = [];
+    const maxAttempts = 100;
+    let attempts = 0;
+    const targetShapeCount = Math.floor(Math.random() * (maxShapes - minShapes + 1)) + minShapes;
+    
+    while (shapes.length < targetShapeCount && attempts < maxAttempts) {
+        attempts++;
+        let newShape = generateRandomSizeShape(maxWidth, maxHeight);
+
+        if (isValidShape(newShape, lines)) {
+            shapes.push(newShape);
+        }
+    }
+    return shapes;
+}
+function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
+    const shapes = [];
+    const maxAttempts = 100;
+    let attempts = 0;
+    const targetShapeCount = Math.floor(Math.random() * (maxShapes - minShapes + 1)) + minShapes;
+    
+    while (shapes.length < targetShapeCount && attempts < maxAttempts) {
+        attempts++;
+        let newShape = generateRandomSizeShape(maxWidth, maxHeight);
+
+        if (isValidShape(newShape, lines)) {
+            shapes.push(newShape);
+        }
+    }
+    return shapes;
+}
+
+  function generateRandomSizeShape(maxWidth, maxHeight) {
+      const minSize = Math.min(maxWidth, maxHeight) / 16; // Minimum size of the shape
+      let width = Math.max(Math.random() * maxWidth / 8, minSize);
+      let height = Math.max(Math.random() * maxHeight / 8, minSize);
+  
+      let x = Math.random() * (maxWidth - width);
+      let y = Math.random() * (maxHeight - height);
+  
+      return { x, y, width, height };
+  }
+  
+  function isValidShape(shape, lines) {
+      // Assume the shape is valid initially
+      let isValid = true;
+      
+      lines.forEach((line) => {
+          // Check if shape overlaps with a line
+          if (line.orientation === 'vertical') {
+              if (shape.x < line.position + line.thickness && shape.x + shape.width > line.position) {
+                  isValid = false; // Shape overlaps vertically
+              }
+          } else {
+              if (shape.y < line.position + line.thickness && shape.y + shape.height > line.position) {
+                  isValid = false; // Shape overlaps horizontally
+              }
+          }
+      });
+      
+      if (!isValid) return false;
+      
+      // Check if shape touches at least two lines (a corner)
+      const touchesVerticalLine = lines.some(line => line.orientation === 'vertical' && (shape.x === line.position || shape.x + shape.width === line.position));
+      const touchesHorizontalLine = lines.some(line => line.orientation === 'horizontal' && (shape.y === line.position || shape.y + shape.height === line.position));
+      
+      return touchesVerticalLine && touchesHorizontalLine;
+  }
+  
+  // Use this function in your shape creation loop to ensure all shapes meet these position criteria.
 
 
 
@@ -132,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
-    function overlayMultimediaButtons(shapes) {
+    function placebuttons(shapes) {
         // Implementation to set up interactive multimedia elements over colored shapes
     }
 
@@ -176,3 +192,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+window.onload = init;
