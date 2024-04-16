@@ -1,25 +1,28 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hoc Omnia Nihil Est</title>
-    <subtitle> rebacks</subtitle>
-    <!-- Link to the external CSS for styling -->
     <link rel="stylesheet" href="styles.css">
+    <title>hoc omnia nihil est Canvas</title>
 </head>
 <body>
-    <div id="banner">MY NAME</div>
-    <canvas id="artCanvas"></canvas>
-    <div id="buttonContainer"></div>
-    <div class="gallery-modal">
-        <div class="gallery-content">
-            <span class="close-button">×</span>
-            <p>Image gallery content goes here...</p>
-            <!-- More images and content can be dynamically loaded here -->
-        </div>
+    <div class="container">
+        <h1 class="large-title">"HOC OMNIA || NIHIL EST"</h1>
     </div>
-    <!-- Link to the external JavaScript for dynamic content and functionality -->
+    
+    <!-- Canvas for drawing the Mondrian-inspired artwork -->
+    <canvas id="mondrianCanvas"></canvas>
+    
+    <!-- Container for interactive buttons -->
+    <div id="buttonContainer">
+        <button id="galleryButton">Gallery</button>
+        <button id="resumeButton">Resume</button>
+        <button id="publicationsButton">Publications</button>
+        <button id="aboutButton">About</button>
+    </div>
+
+    <!-- Script for managing the canvas and interactions -->
     <script src="script.js"></script>
 </body>
 </html>
