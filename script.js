@@ -118,9 +118,6 @@ function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
   }
   
   // Use this function in your shape creation loop to ensure all shapes meet these position criteria.
-
-
-
    function assignColorsToShapes(shapes) {
     const colors = [
         {color: '#FF4136', probability: 0.3},  // Firehouse Red
@@ -192,4 +189,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-window.onload = init;
+window.onload = init();   
