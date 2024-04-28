@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function drawRandomLines() {
         let lines = [];
-        const numLines = Math.floor(Math.random() * 10) + 5; // Random number of lines between 5 and 15
+        const numLines = Math.floor(Math.random() * 10) + 1; // Random number of lines between 1-11
         for (let i = 0; i < numLines; i++) {
             let lineOrientation = Math.random() < 0.5 ? 'vertical' : 'horizontal';
             let lineThickness = Math.floor(Math.random() * (8 - 1) + 1) * 2; // 2-16 at intervals of 2
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
         const shapes = [];
-        const maxAttempts = 100;
+        const maxAttempts = 1000;
         let attempts = 0;
         const targetShapeCount = Math.floor(Math.random() * (maxShapes - minShapes + 1)) + minShapes;
 
@@ -62,15 +62,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function generateRandomSizeShape(maxWidth, maxHeight) {
-        const minSize = Math.min(maxWidth, maxHeight) / 16; // Minimum size of the shape
-        let width = Math.max(Math.random() * maxWidth / 8, minSize);
-        let height = Math.max(Math.random() * maxHeight / 8, minSize);
+    const minSize = Math.min(maxWidth, maxHeight) / 20; // Smaller minimum size
+    let width = Math.random() * (maxWidth / 4) + minSize; // More varied size calculation
+    let height = Math.random() * (maxHeight / 4) + minSize;
 
-        let x = Math.random() * (maxWidth - width);
-        let y = Math.random() * (maxHeight - height);
+    let x = Math.random() * (maxWidth - width);
+    let y = Math.random() * (maxHeight - height);
 
-        return { x, y, width, height };
-    }
+    return { x, y, width, height };
+}
+
 
     function isValidShape(shape, lines) {
         let isValid = true; // Assume the shape is valid initially
@@ -93,6 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const touchesHorizontalLine = lines.some(line => line.orientation === 'horizontal' && (shape.y === line.position || shape.y + shape.height === line.position));
 
         return touchesVerticalLine && touchesHorizontalLine;
+        console.log(`Generated ${shapes.length} shapes`);
     }
 
     function assignColorsToShapes(shapes) {
