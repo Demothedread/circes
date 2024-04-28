@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -20,6 +20,14 @@
         <button id="resumeButton">Resume</button>
         <button id="publicationsButton">Publications</button>
         <button id="aboutButton">About</button>
+    </div>
+
+    <!-- Modal for the gallery, initially hidden -->
+    <div class="gallery-modal" style="display: none;">
+        <div class="gallery-content">
+            <span class="close-button" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+            <img src="https://your.default/image/source.jpg" alt="Gallery Image" style="width: 100%;">
+        </div>
     </div>
 
     <!-- Script for managing the canvas and interactions -->
