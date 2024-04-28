@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Adjusts the canvas size and re-initializes the drawing
     function adjustCanvas() {
         canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight - 50; // Account for banner
+        canvas.height = window.innerHeight - 80; // Account for banner
         init();
     }
 
