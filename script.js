@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
     const canvas = document.getElementById('mondrianCanvas');
     const ctx = canvas.getContext('2d');
     let lines = [];
@@ -17,176 +17,130 @@ document.addEventListener('DOMContentLoaded', () => {
         lines = drawRandomLines();
         shapes = generateShapes(canvas.width, canvas.height, 6, 10, lines); // Ensuring at least 6 shapes
         assignColorsToShapes(shapes);
-        placebuttons(shapes);
+        placeButtons(shapes);
     }
-    
+
     function drawRandomLines() {
-      let lines = [];
-      const numLines = Math.floor(Math.random() * 10) + 5; // Random number of lines between 5 and 15
-      for (let i = 0; i < numLines; i++) {
-        let lineOrientation = Math.random() < 0.5 ? 'vertical' : 'horizontal';
-        let lineThickness = Math.floor(Math.random() * (8 - 1) + 1) * 2; // 2-16 at intervals of 2
-        let position = Math.random() * (lineOrientation === 'vertical' ? canvas.width : canvas.height);
+        let lines = [];
+        const numLines = Math.floor(Math.random() * 10) + 5; // Random number of lines between 5 and 15
+        for (let i = 0; i < numLines; i++) {
+            let lineOrientation = Math.random() < 0.5 ? 'vertical' : 'horizontal';
+            let lineThickness = Math.floor(Math.random() * (8 - 1) + 1) * 2; // 2-16 at intervals of 2
+            let position = Math.random() * (lineOrientation === 'vertical' ? canvas.width : canvas.height);
 
-        ctx.strokeStyle = 'black';
-        ctx.lineWidth = lineThickness;
-        ctx.beginPath();
-        if (lineOrientation === 'vertical') {
-            ctx.moveTo(position, 0);
-            ctx.lineTo(position, canvas.height);
-        } else {
-            ctx.moveTo(0, position);
-            ctx.lineTo(canvas.width, position);
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = lineThickness;
+            ctx.beginPath();
+            if (lineOrientation === 'vertical') {
+                ctx.moveTo(position, 0);
+                ctx.lineTo(position, canvas.height);
+            } else {
+                ctx.moveTo(0, position);
+                ctx.lineTo(canvas.width, position);
+            }
+            ctx.stroke();
+
+            lines.push({ orientation: lineOrientation, position, thickness: lineThickness });
         }
-        ctx.stroke();
-        
-        lines.push({ orientation: lineOrientation, position, thickness: lineThickness });
-    }
-    return lines;
-}
-
+        return lines;
     }
 
-   function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
-    const shapes = [];
-    const maxAttempts = 100;
-    let attempts = 0;
-    const targetShapeCount = Math.floor(Math.random() * (maxShapes - minShapes + 1)) + minShapes;
-    
-    while (shapes.length < targetShapeCount && attempts < maxAttempts) {
-        attempts++;
-        let newShape = generateRandomSizeShape(maxWidth, maxHeight);
+    function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
+        const shapes = [];
+        const maxAttempts = 100;
+        let attempts = 0;
+        const targetShapeCount = Math.floor(Math.random() * (maxShapes - minShapes + 1)) + minShapes;
 
-        if (isValidShape(newShape, lines)) {
-            shapes.push(newShape);
+        while (shapes.length < targetShapeCount && attempts < maxAttempts) {
+            attempts++;
+            let newShape = generateRandomSizeShape(maxWidth, maxHeight);
+            if (isValidShape(newShape, lines)) {
+                shapes.push(newShape);
+            }
         }
-    }
-    return shapes;
-}
-function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
-    const shapes = [];
-    const maxAttempts = 100;
-    let attempts = 0;
-    const targetShapeCount = Math.floor(Math.random() * (maxShapes - minShapes + 1)) + minShapes;
-    
-    while (shapes.length < targetShapeCount && attempts < maxAttempts) {
-        attempts++;
-        let newShape = generateRandomSizeShape(maxWidth, maxHeight);
-
-        if (isValidShape(newShape, lines)) {
-            shapes.push(newShape);
-        }
-    }
-    return shapes;
-}
-
-  function generateRandomSizeShape(maxWidth, maxHeight) {
-      const minSize = Math.min(maxWidth, maxHeight) / 16; // Minimum size of the shape
-      let width = Math.max(Math.random() * maxWidth / 8, minSize);
-      let height = Math.max(Math.random() * maxHeight / 8, minSize);
-  
-      let x = Math.random() * (maxWidth - width);
-      let y = Math.random() * (maxHeight - height);
-  
-      return { x, y, width, height };
-  }
-  
-  function isValidShape(shape, lines) {
-      // Assume the shape is valid initially
-      let isValid = true;
-      
-      lines.forEach((line) => {
-          // Check if shape overlaps with a line
-          if (line.orientation === 'vertical') {
-              if (shape.x < line.position + line.thickness && shape.x + shape.width > line.position) {
-                  isValid = false; // Shape overlaps vertically
-              }
-          } else {
-              if (shape.y < line.position + line.thickness && shape.y + shape.height > line.position) {
-                  isValid = false; // Shape overlaps horizontally
-              }
-          }
-      });
-      
-      if (!isValid) return false;
-      
-      // Check if shape touches at least two lines (a corner)
-      const touchesVerticalLine = lines.some(line => line.orientation === 'vertical' && (shape.x === line.position || shape.x + shape.width === line.position));
-      const touchesHorizontalLine = lines.some(line => line.orientation === 'horizontal' && (shape.y === line.position || shape.y + shape.height === line.position));
-      
-      return touchesVerticalLine && touchesHorizontalLine;
-  }
-  
-  // Use this function in your shape creation loop to ensure all shapes meet these position criteria.
-   function assignColorsToShapes(shapes) {
-    const colors = [
-        {color: '#FF4136', probability: 0.3},  // Firehouse Red
-        {color: '#FFD700', probability: 0.3},  // Pure Yellow
-        {color: '#0074D9', probability: 0.3},  // Blue
-        {color: '#2ECC40', probability: 0.1}   // Green
-    ];
-
-    // Calculate cumulative probabilities for random picking
-    let cumulativeProbability = 0;
-    let cumulativeProbArray = colors.map(color => {
-        cumulativeProbability += color.probability;
-        return cumulativeProbability;
-    });
-
-    // Assigning colors to shapes based on calculated probabilities
-    shapes.forEach(shape => {
-        let randomProb = Math.random();
-        let chosenColor = colors[cumulativeProbArray.findIndex(prob => randomProb <= prob)].color;
-        shape.color = chosenColor;  // Assign the color directly to the shape object
-    });
-
-    // Optionally, you might want to draw or fill these shapes here or in another function.
-}
-
+        return shapes;
     }
 
-    function placebuttons(shapes) {
-        // Implementation to set up interactive multimedia elements over colored shapes
+    function generateRandomSizeShape(maxWidth, maxHeight) {
+        const minSize = Math.min(maxWidth, maxHeight) / 16; // Minimum size of the shape
+        let width = Math.max(Math.random() * maxWidth / 8, minSize);
+        let height = Math.max(Math.random() * maxHeight / 8, minSize);
+
+        let x = Math.random() * (maxWidth - width);
+        let y = Math.random() * (maxHeight - height);
+
+        return { x, y, width, height };
+    }
+
+    function isValidShape(shape, lines) {
+        let isValid = true; // Assume the shape is valid initially
+        lines.forEach((line) => {
+            if (line.orientation === 'vertical') {
+                if (shape.x < line.position + line.thickness && shape.x + shape.width > line.position) {
+                    isValid = false; // Shape overlaps vertically
+                }
+            } else {
+                if (shape.y < line.position + line.thickness && shape.y + shape.height > line.position) {
+                    isValid = false; // Shape overlaps horizontally
+                }
+            }
+        });
+
+        if (!isValid) return false;
+
+        // Check if shape touches at least two lines (a corner)
+        const touchesVerticalLine = lines.some(line => line.orientation === 'vertical' && (shape.x === line.position || shape.x + shape.width === line.position));
+        const touchesHorizontalLine = lines.some(line => line.orientation === 'horizontal' && (shape.y === line.position || shape.y + shape.height === line.position));
+
+        return touchesVerticalLine && touchesHorizontalLine;
+    }
+
+    function assignColorsToShapes(shapes) {
+        const colors = [
+            {color: '#FF4136', probability: 0.3}, // Firehouse Red
+            {color: '#FFD700', probability: 0.3}, // Pure Yellow
+            {color: '#0074D9', probability: 0.3}, // Blue
+            {color: '#2ECC40', probability: 0.1}  // Green
+        ];
+
+        // Calculate cumulative probabilities for random picking
+        let cumulativeProbability = 0;
+        let cumulativeProbArray = colors.map(color => {
+            cumulativeProbability += color.probability;
+            return cumulativeProbability;
+        });
+
+        // Assigning colors to shapes based on calculated probabilities
+        shapes.forEach(shape => {
+            let randomProb = Math.random();
+            let chosenColor = colors[cumulativeProbArray.findIndex(prob => randomProb <= prob)].color;
+            shape.color = chosenColor; // Assign the color directly to the shape object
+        });
+    }
+
+    function placeButtons(shapes) {
+        shapes.forEach((shape, index) => {
+            let button = document.createElement('button');
+            button.style.position = 'absolute';
+            button.style.left = `${shape.x}px`;
+            button.style.top = `${shape.y}px`;
+            button.style.width = `${shape.width}px`;
+            button.style.height = `${shape.height}px`;
+            button.style.opacity = 0; // Make the button invisible but clickable
+            button.style.cursor = 'pointer'; // Change cursor to indicate clickable area
+            button.setAttribute('data-index', index); // Set data attribute for referencing
+
+            button.addEventListener('click', () => {
+                const galleryModal = document.querySelector('.gallery-modal');
+                const img = galleryModal.querySelector('img');
+                img.src = shape.imageSrc || 'https://your.default/image/source.jpg'; // Provide a default or shape-specific image source
+                galleryModal.style.display = 'block';
+            });
+
+            document.body.appendChild(button); // Append each button to the document body
+        });
     }
 
     window.addEventListener('resize', adjustCanvas);
-    adjustCanvas();  // Initial setup
+    adjustCanvas(); // Initial setup
 });
-
-document.addEventListener('DOMContentLoaded', () => {
-    const galleryModal = document.createElement('div');
-    galleryModal.className = 'gallery-modal';
-    const galleryContent = document.createElement('div');
-    galleryContent.className = 'gallery-content';
-    const span = document.createElement('span');
-    span.className = 'close-button';
-    span.innerHTML = '&times;';
-    span.onclick = function() {
-        galleryModal.style.display = "none";
-    };
-
-    galleryModal.appendChild(galleryContent);
-    galleryContent.appendChild(span);
-
-    const img = document.createElement('img');
-    img.className = 'fade-in'; // Apply fade-in effect
-    img.style.width = '100%';
-    // Example image, replace src
-    img.src = 'https://your.image/source.jpg';
-    galleryContent.appendChild(img);
-    
-    document.body.appendChild(galleryModal);
-
-    // Allow multiple images by linking additional next/back navigation, and handling how to update the img's src attribute.
-    
-    // Example usage from common shape color fill handler onClick.
-    shapes.forEach(shape => {
-        // Detect click on shape
-        document.getElementById(shape.id).addEventListener('click', () => {
-            // Show image, update with actual URL or local data
-            img.src = 'https://new.image/source.jpg'; // Adjust SRC on Click or by shape
-            galleryModal.style.display = "block";
-        });
-    });
-});
-window.onload = init();   
