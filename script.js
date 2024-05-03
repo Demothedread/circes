@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function drawRandomLines() {
         let lines = [];
-        const numLines = Math.floor(Math.random() * 10) + 1; // Random number of lines between 1-11
+        const numLines = Math.floor(Math.random() * 10) + 3; // Random number of lines between 1-11
         for (let i = 0; i < numLines; i++) {
             let lineOrientation = Math.random() < 0.5 ? 'vertical' : 'horizontal';
             let lineThickness = Math.floor(Math.random() * (8 - 1) + 1) * 2; // 2-16 at intervals of 2
