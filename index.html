@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
@@ -22,6 +22,14 @@
         <button class="animate__animated">Publications</button>
         <button class="animate__animated">About</button>
       </div>
+
+    <!-- Modal for the gallery, initially hidden -->
+    <div class="gallery-modal" style="display: none;">
+        <div class="gallery-content">
+            <span class="close-button" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+            <img src="https://imgur.com/a/Tv1kQKW" alt="Gallery Image" style="width: 100%;">
+        </div>
+    </div>
 
     <!-- Script for managing the canvas and interactions -->
     <script src="script.js"></script>
