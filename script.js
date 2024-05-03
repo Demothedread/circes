@@ -15,11 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function init() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         lines = drawRandomLines();
-        shapes = generateShapes(canvas.width, canvas.height, 6, 10, lines); // Ensuring at least 6 shapes
-        assignColorsToShapes(shapes);
+        shapes = generateShapes(canvas.width, canvas.height, 5, 10, lines); // Ensuring at least 6 shapes
+            assignColorsToShapes(shapes);
+            drawShapes(shapes, ctx);
         placebuttons(shapes);
+        
     }
-    
+
     function drawRandomLines() {
       let lines = [];
       const numLines = Math.floor(Math.random() * 10) + 5; // Random number of lines between 5 and 15
@@ -45,81 +47,59 @@ document.addEventListener('DOMContentLoaded', () => {
     return lines;
 }
 
-    }
+    function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
+        const shapes = [];
+        const maxAttempts = 1000;
+        let attempts = 0;
+        const targetShapeCount = Math.floor(Math.random() * (maxShapes - minShapes + 1)) + minShapes;
+        
+        while (shapes.length < targetShapeCount && attempts < maxAttempts) {
+            attempts++;
+            let newShape = generateRandomSizeShape(maxWidth, maxHeight);
 
-   function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
-    const shapes = [];
-    const maxAttempts = 100;
-    let attempts = 0;
-    const targetShapeCount = Math.floor(Math.random() * (maxShapes - minShapes + 1)) + minShapes;
-    
-    while (shapes.length < targetShapeCount && attempts < maxAttempts) {
-        attempts++;
-        let newShape = generateRandomSizeShape(maxWidth, maxHeight);
-
-        if (isValidShape(newShape, lines)) {
-            shapes.push(newShape);
+            if (isValidShape(newShape, lines)) {
+                newShape.id = `shape-${shapes.length}`; // Assign an id to the shape
+                shapes.push(newShape);
+            }
         }
+        return shapes;
     }
-    return shapes;
-}
-function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
-    const shapes = [];
-    const maxAttempts = 100;
-    let attempts = 0;
-    const targetShapeCount = Math.floor(Math.random() * (maxShapes - minShapes + 1)) + minShapes;
+
+    function isValidShape(shape, lines) {
+        // Check for non-overlapping with lines
+        let overlaps = lines.some(line => {
+            if (line.orientation === 'vertical') {
+                return (shape.x < line.position + line.thickness && shape.x + shape.width > line.position);
+            } else {
+                return (shape.y < line.position + line.thickness && shape.y + shape.height > line.position);
+            }
+        });
     
-    while (shapes.length < targetShapeCount && attempts < maxAttempts) {
-        attempts++;
-        let newShape = generateRandomSizeShape(maxWidth, maxHeight);
-
-        if (isValidShape(newShape, lines)) {
-            shapes.push(newShape);
+        if (overlaps) {
+            return false; // If any overlap exists, the shape is invalid
         }
+    
+        // Check for touch on at least two sides (one vertical and one horizontal line)
+        const touchesVerticalLine = lines.some(line => line.orientation === 'vertical' && 
+            (shape.x === line.position || shape.x + shape.width === line.position + line.thickness));
+        const touchesHorizontalLine = lines.some(line => line.orientation === 'horizontal' && 
+            (shape.y === line.position || shape.y + shape.height === line.position + line.thickness));
+    
+        return touchesVerticalLine && touchesHorizontalLine;
     }
-    return shapes;
-}
-
-  function generateRandomSizeShape(maxWidth, maxHeight) {
-      const minSize = Math.min(maxWidth, maxHeight) / 16; // Minimum size of the shape
-      let width = Math.max(Math.random() * maxWidth / 8, minSize);
-      let height = Math.max(Math.random() * maxHeight / 8, minSize);
-  
-      let x = Math.random() * (maxWidth - width);
-      let y = Math.random() * (maxHeight - height);
-  
-      return { x, y, width, height };
-  }
-  
-  function isValidShape(shape, lines) {
-      // Assume the shape is valid initially
-      let isValid = true;
-      
-      lines.forEach((line) => {
-          // Check if shape overlaps with a line
-          if (line.orientation === 'vertical') {
-              if (shape.x < line.position + line.thickness && shape.x + shape.width > line.position) {
-                  isValid = false; // Shape overlaps vertically
-              }
-          } else {
-              if (shape.y < line.position + line.thickness && shape.y + shape.height > line.position) {
-                  isValid = false; // Shape overlaps horizontally
-              }
-          }
-      });
-      
-      if (!isValid) return false;
-      
-      // Check if shape touches at least two lines (a corner)
-      const touchesVerticalLine = lines.some(line => line.orientation === 'vertical' && (shape.x === line.position || shape.x + shape.width === line.position));
-      const touchesHorizontalLine = lines.some(line => line.orientation === 'horizontal' && (shape.y === line.position || shape.y + shape.height === line.position));
-      
-      return touchesVerticalLine && touchesHorizontalLine;
-  }
+    
+    function generateRandomSizeShape(maxWidth, maxHeight) {
+        const minSize = 50; // Fixed minimum size to avoid very small shapes
+        let width = Math.random() * (maxWidth / 4 - minSize) + minSize;
+        let height = Math.random() * (maxHeight / 4 - minSize) + minSize;
+        let x = Math.random() * (maxWidth - width);
+        let y = Math.random() * (maxHeight - height);
+    
+        return { x, y, width, height };
+    }
+    
   
   // Use this function in your shape creation loop to ensure all shapes meet these position criteria.
-
-
 
    function assignColorsToShapes(shapes) {
     const colors = [
@@ -144,18 +124,42 @@ function generateShapes(maxWidth, maxHeight, minShapes, maxShapes, lines) {
     });
 
     // Optionally, you might want to draw or fill these shapes here or in another function.
+    function drawShapes(shapes, ctx) {
+        shapes.forEach(shape => {
+            ctx.fillStyle = shape.color; // Use the color assigned in the assignColorsToShapes function
+            ctx.fillRect(shape.x, shape.y, shape.width, shape.height); // Draw the rectangle
+        });
+    }
+    
 }
 
-    }
-
     function placebuttons(shapes) {
-        // Implementation to set up interactive multimedia elements over colored shapes
+        // Select five random shapes to place the buttons on
+        const selectedShapes = [];
+        for (let i = 0; i < 5; i++) {
+        const randomIndex = Math.floor(Math.random() * shapes.length);
+        selectedShapes.push(shapes[randomIndex]);
+        }
+    
+        // Create a button for each selected shape
+        selectedShapes.forEach((shape) => {
+        const button = document.createElement('button');
+        button.className = 'shape-button';
+        button.style.position = 'absolute';
+        button.style.left = `${shape.x + shape.width / 2}px`;
+        button.style.top = `${shape.y + shape.height / 2}px`;
+    
+        // Add the button to the DOM
+        document.body.appendChild(button);
+        });
     }
+  
 
     window.addEventListener('resize', adjustCanvas);
     adjustCanvas();  // Initial setup
 });
 
+// Remove one of the DOMContentLoaded event listeners
 document.addEventListener('DOMContentLoaded', () => {
     const galleryModal = document.createElement('div');
     galleryModal.className = 'gallery-modal';
@@ -175,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     img.className = 'fade-in'; // Apply fade-in effect
     img.style.width = '100%';
     // Example image, replace src
-    img.src = 'https://your.image/source.jpg';
+    img.src = '/Users/jreback/circes/images/HocOmnia_Logo.png';
     galleryContent.appendChild(img);
     
     document.body.appendChild(galleryModal);
@@ -187,9 +191,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Detect click on shape
         document.getElementById(shape.id).addEventListener('click', () => {
             // Show image, update with actual URL or local data
-            img.src = 'https://new.image/source.jpg'; // Adjust SRC on Click or by shape
+            img.src = '/Users/jreback/circes/images/Firefly promo stills for a futuristic joyful flying cruise-ship Zeppelin, with multiple pools, minig.jpg'; // Adjust SRC on Click or by shape
             galleryModal.style.display = "block";
         });
     });
 });
-window.onload = init;
+
+init(); // Call the init function directly
